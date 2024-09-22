@@ -19,6 +19,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
           database: configService.get('DATABASE_NAME'),
           entities: [entitiesPath], 
           synchronize: process.env.NODE_ENV !== 'production', 
+         
         };
       },
     }),

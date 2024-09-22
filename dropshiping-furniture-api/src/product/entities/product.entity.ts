@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Order } from 'src/orders/entities/order.entity';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
 
 @Entity()
 export class Product {
@@ -20,7 +21,7 @@ export class Product {
   @Column()
   isOnDiscount: boolean;
 
-  @Column()
+  @Column({ nullable: true })
   image: string;
 
   @Column('text', { nullable: true }) 
@@ -31,5 +32,8 @@ export class Product {
 
   @Column('int')
   stock: number;
+
+  @ManyToMany(() => Order, order => order.products)
+  orders: Order[];
 }
 

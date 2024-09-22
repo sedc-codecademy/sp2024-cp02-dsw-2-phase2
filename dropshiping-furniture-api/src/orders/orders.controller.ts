@@ -1,34 +1,52 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { OrdersService } from './orders.service';
+import { Controller, Get, Post, Param, Body, Put, Delete } from '@nestjs/common';
+import { OrderService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { Order } from './entities/order.entity';
+import { ApiTags, ApiResponse, ApiParam, ApiBody, ApiOperation } from '@nestjs/swagger';
 
+@ApiTags('orders')
 @Controller('orders')
-export class OrdersController {
-  constructor(private readonly ordersService: OrdersService) {}
-
-  @Post()
-  create(@Body() createOrderDto: CreateOrderDto) {
-    return this.ordersService.create(createOrderDto);
-  }
+export class OrderController {
+  constructor(private readonly orderService: OrderService) {}
 
   @Get()
-  findAll() {
-    return this.ordersService.findAll();
+  @ApiOperation({ summary: 'Get all orders', description: 'Retrieve a list of all orders placed.' })
+  @ApiResponse({ status: 200, description: 'Get all orders.' })
+  async findAll(): Promise<Order[]> {
+    return this.orderService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.ordersService.findOne(+id);
+  @ApiOperation({ summary: 'Get order by ID', description: 'Retrieve a specific order by its unique identifier.' })
+  @ApiParam({ name: 'id', required: true, description: 'Order ID' })
+  @ApiResponse({ status: 200, description: 'Get order by ID.' })
+  findOne(@Param('id') id: number): Promise<Order> {
+    return this.orderService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
-    return this.ordersService.update(+id, updateOrderDto);
+  @Post()
+  @ApiOperation({ summary: 'Create a new order', description: 'Add a new order to the system.' })
+  @ApiBody({ type: CreateOrderDto })
+  @ApiResponse({ status: 201, description: 'Create a new order.' })
+  create(@Body() createOrderDto: CreateOrderDto): Promise<Order> {
+    return this.orderService.create(createOrderDto as Order);
+  }
+
+  @Put(':id')
+  @ApiOperation({ summary: 'Update an existing order', description: 'Modify the details of an existing order.' })
+  @ApiParam({ name: 'id', required: true, description: 'Order ID' })
+  @ApiBody({ type: UpdateOrderDto })
+  @ApiResponse({ status: 200, description: 'Update an existing order.' })
+  update(@Param('id') id: number, @Body() updateOrderDto: UpdateOrderDto): Promise<Order> {
+    return this.orderService.update(id, updateOrderDto as Order);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.ordersService.remove(+id);
+  @ApiOperation({ summary: 'Delete an order', description: 'Remove an order from the system by its unique identifier.' })
+  @ApiParam({ name: 'id', required: true, description: 'Order ID' })
+  @ApiResponse({ status: 204, description: 'Delete an order.' })
+  remove(@Param('id') id: number): Promise<void> {
+    return this.orderService.remove(id);
   }
 }
