@@ -29,8 +29,8 @@ export class OrderController {
   @ApiOperation({ summary: 'Create a new order', description: 'Add a new order to the system.' })
   @ApiBody({ type: CreateOrderDto })
   @ApiResponse({ status: 201, description: 'Create a new order.' })
-  create(@Body() createOrderDto: CreateOrderDto): Promise<Order> {
-    return this.orderService.create(createOrderDto as Order);
+  async create(@Body() createOrderDto: CreateOrderDto): Promise<Order> {
+      return this.orderService.create(createOrderDto);
   }
 
   @Put(':id')
