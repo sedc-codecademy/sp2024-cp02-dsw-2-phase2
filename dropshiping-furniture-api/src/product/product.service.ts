@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Product } from './entities/product.entity';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Product } from "./entities/product.entity";
 
 @Injectable()
 export class ProductService {
@@ -11,9 +11,9 @@ export class ProductService {
   ) {}
 
   findAll(): Promise<Product[]> {
-    console.log('Fetching all products'); 
-    return this.productRepository.find().then(products => {
-      console.log('Products retrieved:', products); 
+    console.log("Fetching all products");
+    return this.productRepository.find().then((products) => {
+      console.log("Products retrieved:", products);
       return products;
     });
   }

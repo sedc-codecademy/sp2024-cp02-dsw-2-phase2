@@ -1,5 +1,5 @@
-import { Order } from 'src/orders/entities/order.entity';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
+import { Order } from "src/orders/entities/order.entity";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from "typeorm";
 
 @Entity()
 export class Product {
@@ -12,10 +12,10 @@ export class Product {
   @Column()
   category: string;
 
-  @Column('int')
+  @Column("int")
   price: number;
 
-  @Column('int', { nullable: true }) 
+  @Column("int", { nullable: true })
   discountPrice: number;
 
   @Column()
@@ -24,16 +24,15 @@ export class Product {
   @Column({ nullable: true })
   image: string;
 
-  @Column('text', { nullable: true }) 
+  @Column("text", { nullable: true })
   description: string;
 
-  @Column('simple-array')
+  @Column("simple-array")
   imageUrl: string[];
 
-  @Column('int')
+  @Column("int")
   stock: number;
 
-  @ManyToMany(() => Order, order => order.products)
+  @ManyToMany(() => Order, (order) => order.products)
   orders: Order[];
 }
-

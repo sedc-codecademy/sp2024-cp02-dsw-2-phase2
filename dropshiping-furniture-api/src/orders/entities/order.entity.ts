@@ -1,5 +1,11 @@
-import { Product } from 'src/product/entities/product.entity';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm';
+import { Product } from "src/product/entities/product.entity";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToMany,
+  JoinTable,
+} from "typeorm";
 
 @Entity()
 export class Order {
@@ -9,10 +15,10 @@ export class Order {
   @Column()
   productId: number;
 
-  @Column('int')
+  @Column("int")
   quantity: number;
 
-  @Column('decimal')
+  @Column("decimal")
   totalPrice: number;
 
   @Column()
@@ -21,11 +27,10 @@ export class Order {
   @Column()
   customerEmail: string;
 
-  @Column('text', { nullable: true })
+  @Column("text", { nullable: true })
   notes?: string;
 
-  @ManyToMany(() => Product, product => product.orders)
+  @ManyToMany(() => Product, (product) => product.orders)
   @JoinTable()
   products: Product[];
 }
-
