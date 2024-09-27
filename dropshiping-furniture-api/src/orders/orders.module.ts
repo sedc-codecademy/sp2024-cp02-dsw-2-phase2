@@ -7,9 +7,10 @@ import { ProductController } from 'src/product/product.controller';
 import { ProductService } from 'src/product/product.service';
 import { Order } from './entities/order.entity';
 import { Product } from 'src/product/entities/product.entity';
+import { OrderProduct } from 'src/order-product/entities/order-product.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Order, Product])],
+  imports: [TypeOrmModule.forFeature([Order, Product, OrderProduct])],
   providers: [ProductService, OrderService],
   controllers: [ProductController, OrderController],
 })
