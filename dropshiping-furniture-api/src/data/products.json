@@ -29,7 +29,8 @@
         "../assets/data/images/sofas/laguno1.jpg",
         "../assets/data/images/sofas/laguno2.jpg"
       ],
-      "stock": 21
+      "stock": 21,
+      "orders": []
     },
     {
       "id": 3,
@@ -46,6 +47,7 @@
         "../assets/data/images/sofas/omega3.jpg"
       ],
       "stock": 2
+     
     },
     {
       "id": 4,

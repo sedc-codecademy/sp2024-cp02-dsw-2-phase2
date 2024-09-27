@@ -49,15 +49,13 @@ export class ProductController {
   }
 
   @Post()
-  @ApiOperation({
-    summary: "Create a new product",
-    description: "Add a new product to the store inventory.",
-  })
-  @ApiBody({ type: CreateProductDto })
-  @ApiResponse({ status: 201, description: "Create a new product." })
-  create(@Body() createProductDto: CreateProductDto): Promise<Product> {
-    return this.productService.create(createProductDto as Product);
-  }
+@ApiOperation({ summary: 'Create a new product', description: 'Add a new product to the store inventory.' })
+@ApiBody({ type: CreateProductDto })
+@ApiResponse({ status: 201, description: 'Create a new product.' })
+async create(@Body() createProductDto: CreateProductDto): Promise<Product> {
+    return this.productService.create(createProductDto); 
+}
+
 
   @Put(":id")
   @ApiOperation({

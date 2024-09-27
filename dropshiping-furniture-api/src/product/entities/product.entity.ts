@@ -1,5 +1,6 @@
-import { Order } from "src/orders/entities/order.entity";
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from "typeorm";
+import { OrderProduct } from 'src/order-product/entities/order-product.entity';
+import { Order } from 'src/orders/entities/order.entity';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, OneToMany } from 'typeorm';
 
 @Entity()
 export class Product {
@@ -22,7 +23,7 @@ export class Product {
   isOnDiscount: boolean;
 
   @Column({ nullable: true })
-  image: string;
+  image?: string;
 
   @Column("text", { nullable: true })
   description: string;
@@ -33,6 +34,9 @@ export class Product {
   @Column("int")
   stock: number;
 
-  @ManyToMany(() => Order, (order) => order.products)
-  orders: Order[];
+  @ManyToMany(() => Order, order => order.products)
+  orders?: Order[];
+
+@OneToMany(() => OrderProduct, (orderProduct) => orderProduct.product)
+orderProducts: OrderProduct[];
 }
