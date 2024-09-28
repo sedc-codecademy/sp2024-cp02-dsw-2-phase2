@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { Order } from './entities/order.entity';
@@ -26,43 +26,47 @@ export class OrderService {
     return this.orderRepository.findOne({ where: { id }, relations: ['products', 'orderProducts'] }); 
   }
 
-async create(createOrderDto: CreateOrderDto): Promise<Order> {
-  const products = createOrderDto.products;
-
-  if (products.length === 0) {
-    throw new Error('No products provided');
-  }
-
-  const totalPrice = products.reduce((acc, product) => {
-    if (product.stock < createOrderDto.quantity) {
-      throw new Error(`Not enough stock for product ID ${product.id}`);
+  async create(createOrderDto: CreateOrderDto): Promise<Order> {
+    const productIds = createOrderDto.productIds;
+  
+    if (productIds.length === 0) {
+      throw new Error('No products provided');
     }
-    return acc + (product.price * createOrderDto.quantity);
-  }, 0);
-
-  const order = new Order();
-  order.quantity = createOrderDto.quantity;
-  order.totalPrice = totalPrice;
-  order.customerName = createOrderDto.customerName;
-  order.customerEmail = createOrderDto.customerEmail;
-  order.notes = createOrderDto.notes;
-  order.products = products;  
-
-  const savedOrder = await this.orderRepository.save(order);
-  for (const product of products) {
-    const orderProduct = new OrderProduct();
-    orderProduct.order = savedOrder;
-    orderProduct.product = product;
-    orderProduct.quantity = createOrderDto.quantity;
-
-    await this.orderProductRepository.save(orderProduct);
-
-    product.stock -= createOrderDto.quantity;
-    await this.productRepository.save(product);
+  
+  
+    const products = await this.productRepository.findBy({ id: In(productIds) });
+  
+    const totalPrice = products.reduce((acc, product) => {
+      if (product.stock < createOrderDto.quantity) {
+        throw new Error(`Not enough stock for product ID ${product.id}`);
+      }
+      return acc + (product.price * createOrderDto.quantity);
+    }, 0);
+  
+    const order = new Order();
+    order.quantity = createOrderDto.quantity;
+    order.totalPrice = totalPrice;
+    order.customerName = createOrderDto.customerName;
+    order.customerEmail = createOrderDto.customerEmail;
+    order.notes = createOrderDto.notes;
+    order.products = products;  
+  
+    const savedOrder = await this.orderRepository.save(order);
+    for (const product of products) {
+      const orderProduct = new OrderProduct();
+      orderProduct.order = savedOrder;
+      orderProduct.product = product;
+      orderProduct.quantity = createOrderDto.quantity;
+  
+      await this.orderProductRepository.save(orderProduct);
+  
+      product.stock -= createOrderDto.quantity;
+      await this.productRepository.save(product);
+    }
+  
+    return savedOrder;
   }
-
-  return savedOrder;
-}
+  
 
   async update(id: number, order: Order): Promise<Order> {
     await this.orderRepository.update(id, order);
@@ -70,8 +74,9 @@ async create(createOrderDto: CreateOrderDto): Promise<Order> {
   }
 
   async remove(id: number): Promise<void> {
+    await this.orderProductRepository.delete({ order: { id } });
     await this.orderRepository.delete(id);
-  }
+}
 
   
 }

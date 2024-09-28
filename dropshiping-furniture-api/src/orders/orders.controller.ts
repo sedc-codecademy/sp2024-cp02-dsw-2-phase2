@@ -46,7 +46,8 @@ export class OrderController {
   @ApiOperation({ summary: 'Delete an order', description: 'Remove an order from the system by its unique identifier.' })
   @ApiParam({ name: 'id', required: true, description: 'Order ID' })
   @ApiResponse({ status: 204, description: 'Delete an order.' })
-  remove(@Param('id') id: number): Promise<void> {
-    return this.orderService.remove(id);
-  }
+  async remove(@Param('id') id: number): Promise<void> {
+    await this.orderService.remove(id);
+    return; 
+}
 }

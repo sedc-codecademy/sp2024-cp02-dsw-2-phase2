@@ -40,9 +40,9 @@ export class ProductService {
     }
   }
 
-  async remove(id: number): Promise<void> {
+ async remove(id: number): Promise<void> {
     await this.productRepository.delete(id);
-  }
+  } 
 
   async findByCategory(category: string): Promise<Product[]> {
     return await this.productRepository.find({ where: { category } });

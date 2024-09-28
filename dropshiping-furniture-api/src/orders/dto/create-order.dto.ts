@@ -35,22 +35,15 @@ export class CreateOrderDto {
   @IsOptional()
   notes?: string;
 
-  // @ApiProperty({
-  //   description: 'List of product IDs ',
-  //   
-  // })
-  // @IsArray()
-  // @IsNotEmpty()
-  // @IsInt({ each: true })
-  // productIds: number[]; 
-
   @ApiProperty({
-    description: 'List of products being ordered',
-    type: [Product],  
+    description: 'List of product IDs being ordered',
+    example: [1, 2, 3],
   })
   @IsArray()
   @IsNotEmpty()
-  products: Product[]; 
+  @IsInt({ each: true })
+  productIds: number[]; 
+
 }
   
  
