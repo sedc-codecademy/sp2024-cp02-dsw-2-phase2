@@ -4,12 +4,14 @@ import { Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 
+
 @Injectable()
 export class ProductService {
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
   ) {}
+
 
   async findAll(): Promise<Product[]> {
     console.log('Fetching all products'); 
@@ -26,6 +28,7 @@ export class ProductService {
     const product = this.productRepository.create(createProductDto); // Создавање на нов објект
     return await this.productRepository.save(product);
 }
+
 
 
   async update(id: number, product: Product): Promise<Product> {

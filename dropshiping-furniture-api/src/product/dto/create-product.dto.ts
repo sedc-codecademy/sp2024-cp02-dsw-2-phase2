@@ -5,6 +5,7 @@ import {
   IsOptional,
   IsArray,
   IsPositive,
+  IsNumber,
 } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 
@@ -13,9 +14,14 @@ export class CreateProductDto {
   @IsString()
   name: string;
 
-  @ApiProperty({ description: "The category of the product" })
-  @IsString()
-  category: string;
+  //
+  @IsNumber()
+  categoryId: number;
+  
+  //
+  // @ApiProperty({ description: "The category of the product" })
+  // @IsString()
+  // category: string;
 
   @ApiProperty({ description: "The price of the product" })
   @IsInt()

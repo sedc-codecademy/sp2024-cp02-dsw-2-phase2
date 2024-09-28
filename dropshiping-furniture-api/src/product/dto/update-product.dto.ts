@@ -5,6 +5,7 @@ import {
   IsOptional,
   IsArray,
   IsPositive,
+  IsNumber,
 } from "class-validator";
 import { CreateProductDto } from "./create-product.dto";
 import { PartialType } from "@nestjs/mapped-types";
@@ -21,9 +22,9 @@ export class UpdateProductDto extends PartialType(CreateProductDto) {
   @ApiPropertyOptional({
     description: "Category of the product (optional)",
   })
-  @IsString()
-  @IsOptional()
-  category?: string;
+  // @IsString()
+  // @IsOptional()
+  // category?: string;
 
   @ApiPropertyOptional({
     description: "Price of the product (optional)",

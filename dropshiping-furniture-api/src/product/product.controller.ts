@@ -6,6 +6,7 @@ import {
   Body,
   Put,
   Delete,
+  Patch,
 } from "@nestjs/common";
 import { ProductService } from "./product.service";
 import { CreateProductDto } from "./dto/create-product.dto";
@@ -23,7 +24,7 @@ import {
 @ApiTags("products")
 @Controller("products")
 export class ProductController {
-  constructor(private readonly productService: ProductService) {}
+  constructor(private readonly productService: ProductService) { }
 
   @Get()
   @ApiOperation({
@@ -49,15 +50,15 @@ export class ProductController {
   }
 
   @Post()
-@ApiOperation({ summary: 'Create a new product', description: 'Add a new product to the store inventory.' })
-@ApiBody({ type: CreateProductDto })
-@ApiResponse({ status: 201, description: 'Create a new product.' })
-async create(@Body() createProductDto: CreateProductDto): Promise<Product> {
-    return this.productService.create(createProductDto); 
-}
+  @ApiOperation({ summary: 'Create a new product', description: 'Add a new product to the store inventory.' })
+  @ApiBody({ type: CreateProductDto })
+  @ApiResponse({ status: 201, description: 'Create a new product.' })
+  async create(@Body() createProductDto: CreateProductDto): Promise<Product> {
+    return this.productService.create(createProductDto);
+  }
 
 
-  @Put(":id")
+  @Patch(":id")
   @ApiOperation({
     summary: "Update an existing product",
     description:
@@ -67,9 +68,9 @@ async create(@Body() createProductDto: CreateProductDto): Promise<Product> {
   @ApiResponse({ status: 200, description: "Update an existing product." })
   update(
     @Param("id") id: number,
-    @Body() updateProductDto: UpdateProductDto,
+    @Body() updateProductData: UpdateProductDto,
   ): Promise<Product> {
-    return this.productService.update(id, updateProductDto as Product);
+    return this.productService.update(id, updateProductData);
   }
 
   @Delete(":id")
