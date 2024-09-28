@@ -1,5 +1,6 @@
-import { IsInt, IsString, IsEmail, IsOptional, IsPositive, IsArray, IsNotEmpty } from 'class-validator';
+import { IsInt, IsString, IsEmail, IsOptional, IsPositive, IsArray, IsNotEmpty, isString } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Product } from 'src/product/entities/product.entity';
 
 export class CreateOrderDto {
   @ApiProperty({
@@ -34,16 +35,26 @@ export class CreateOrderDto {
   @IsOptional()
   notes?: string;
 
+  // @ApiProperty({
+  //   description: 'List of product IDs ',
+  //   
+  // })
+  // @IsArray()
+  // @IsNotEmpty()
+  // @IsInt({ each: true })
+  // productIds: number[]; 
+
   @ApiProperty({
-    description: 'List of product IDs being ordered',
-    example: [1, 2, 3],
+    description: 'List of products being ordered',
+    type: [Product],  
   })
   @IsArray()
   @IsNotEmpty()
-  @IsInt({ each: true })
-  productIds: number[]; 
-
-
+  products: Product[]; 
 }
+  
+ 
+
+
 
 

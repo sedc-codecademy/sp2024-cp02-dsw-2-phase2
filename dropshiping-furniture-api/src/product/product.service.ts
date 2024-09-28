@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { MoreThan, Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 
@@ -23,10 +23,9 @@ export class ProductService {
   }
 
   async create(createProductDto: CreateProductDto): Promise<Product> {
-    const product = this.productRepository.create(createProductDto); // Создавање на нов објект
+    const product = this.productRepository.create(createProductDto);
     return await this.productRepository.save(product);
 }
-
 
   async update(id: number, product: Product): Promise<Product> {
     await this.productRepository.update(id, product);
@@ -43,5 +42,24 @@ export class ProductService {
 
   async remove(id: number): Promise<void> {
     await this.productRepository.delete(id);
+  }
+
+  async findByCategory(category: string): Promise<Product[]> {
+    return await this.productRepository.find({ where: { category } });
+  }
+
+  async findDiscountedProducts(): Promise<Product[]> {
+    return await this.productRepository.find({ where: { isOnDiscount: true } });
+  }
+
+  async findByName(name: string): Promise<Product[]> {
+    return await this.productRepository
+      .createQueryBuilder('product')
+      .where('product.name LIKE :name', { name: `%${name}%` })
+      .getMany();
+  }
+
+  async findAvailableProducts(): Promise<Product[]> {
+    return await this.productRepository.find({ where: { stock: MoreThan(0) } });
   }
 }
