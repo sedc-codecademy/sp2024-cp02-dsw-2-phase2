@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { Order } from './entities/order.entity';
@@ -28,17 +28,16 @@ export class OrderService {
 
   async create(createOrderDto: CreateOrderDto): Promise<Order> {
     const productIds = createOrderDto.productIds;
-  
     if (productIds.length === 0) {
-      throw new Error('No products provided');
+      throw new BadRequestException('No products provided');
     }
-  
-  
     const products = await this.productRepository.findBy({ id: In(productIds) });
-  
+   
+
+
     const totalPrice = products.reduce((acc, product) => {
       if (product.stock < createOrderDto.quantity) {
-        throw new Error(`Not enough stock for product ID ${product.id}`);
+        throw new BadRequestException(`Not enough stock for product ID ${product.id}`);
       }
       return acc + (product.price * createOrderDto.quantity);
     }, 0);

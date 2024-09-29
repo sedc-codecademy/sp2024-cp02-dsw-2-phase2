@@ -22,8 +22,7 @@ export class Product {
   @Column()
   isOnDiscount: boolean;
 
-  @Column({ nullable: true })
-  image?: string;
+  
 
   @Column('text', { nullable: true }) 
   description: string;

@@ -25,10 +25,7 @@ export class CreateProductDto {
   @IsBoolean()
   isOnDiscount: boolean;
 
-  @ApiProperty({ description: 'The image of the product' })
-  @IsString()
-  image: string;
-
+  
   @ApiProperty({ description: 'The description of the product', required: false })
   @IsString()
   @IsOptional()

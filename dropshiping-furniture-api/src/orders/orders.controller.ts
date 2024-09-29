@@ -34,13 +34,18 @@ export class OrderController {
   }
 
   @Put(':id')
-  @ApiOperation({ summary: 'Update an existing order', description: 'Modify the details of an existing order.' })
-  @ApiParam({ name: 'id', required: true, description: 'Order ID' })
-  @ApiBody({ type: UpdateOrderDto })
-  @ApiResponse({ status: 200, description: 'Update an existing order.' })
-  update(@Param('id') id: number, @Body() updateOrderDto: UpdateOrderDto): Promise<Order> {
-    return this.orderService.update(id, updateOrderDto as Order);
-  }
+@ApiOperation({ summary: 'Update an existing order', description: 'Modify the details of an existing order.' })
+@ApiParam({ name: 'id', required: true, description: 'Order ID' })
+@ApiBody({ type: UpdateOrderDto })
+@ApiResponse({ status: 200, description: 'Update an existing order.' })
+async update(@Param('id') id: number, @Body() updateOrderDto: UpdateOrderDto): Promise<Order> {
+ 
+  const existingOrder = await this.orderService.findOne(id);
+  const updatedOrder = { ...existingOrder, ...updateOrderDto };
+
+  return this.orderService.update(id, updatedOrder);
+}
+
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete an order', description: 'Remove an order from the system by its unique identifier.' })

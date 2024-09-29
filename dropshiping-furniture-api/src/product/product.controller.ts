@@ -49,8 +49,6 @@ export class ProductController {
     return this.productService.findAvailableProducts();
   }
 
-  
-
   @Get(':id')
   @ApiOperation({ summary: 'Get product by ID', description: 'Retrieve a single product by its unique identifier.' })
   @ApiParam({ name: 'id', required: true, description: 'Product ID' })
@@ -64,7 +62,7 @@ export class ProductController {
   @ApiBody({ type: CreateProductDto })
   @ApiResponse({ status: 201, description: 'Create a new product.' })
   async create(@Body() createProductDto: CreateProductDto): Promise<Product> {
-    return this.productService.create(createProductDto); 
+    return await this.productService.create(createProductDto); 
   }
 
   @Put(':id')
@@ -72,7 +70,7 @@ export class ProductController {
   @ApiParam({ name: 'id', required: true, description: 'Product ID' })
   @ApiResponse({ status: 200, description: 'Update an existing product.' })
   async update(@Param('id') id: number, @Body() updateProductDto: UpdateProductDto): Promise<Product> {
-    return this.productService.update(id, updateProductDto as Product);
+    return this.productService.update(id, updateProductDto);
   }
 
   @Delete(':id')
