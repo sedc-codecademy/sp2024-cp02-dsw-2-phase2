@@ -49,9 +49,7 @@ export class UpdateProductDto extends PartialType(CreateProductDto) {
   description: 'Image URL of the product (optional)',
 
   })
-  @IsString()
-  @IsOptional()
-  image?: string;
+ 
 
   @ApiPropertyOptional({
     description: 'Description of the product (optional)',

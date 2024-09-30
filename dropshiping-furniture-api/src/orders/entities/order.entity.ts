@@ -1,6 +1,7 @@
 import { OrderProduct } from 'src/order-product/entities/order-product.entity';
 import { Product } from 'src/product/entities/product.entity';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm';
+import { User } from 'src/users/entities/user.entity';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany, ManyToOne } from 'typeorm';
 
 @Entity()
 export class Order {
@@ -32,6 +33,9 @@ export class Order {
   
   @OneToMany(() => OrderProduct, (orderProduct) => orderProduct.order, { cascade: true })
   orderProducts: OrderProduct[];
+
+  @ManyToOne(() => User, (user) => user.orders)
+  user: User;
 }
 
 

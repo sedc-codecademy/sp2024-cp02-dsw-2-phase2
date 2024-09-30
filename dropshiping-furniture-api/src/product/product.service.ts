@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Body, Injectable, NotFoundException, Param } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { MoreThan, Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 @Injectable()
 export class ProductService {
@@ -23,25 +24,45 @@ export class ProductService {
   }
 
   async create(createProductDto: CreateProductDto): Promise<Product> {
-    const product = this.productRepository.create(createProductDto); // Создавање на нов објект
+    const product = this.productRepository.create(createProductDto);
     return await this.productRepository.save(product);
 }
 
-
-  async update(id: number, product: Product): Promise<Product> {
-    await this.productRepository.update(id, product);
-    return await this.productRepository.findOneBy({ id });
+async update(id: number, updateProductDto: UpdateProductDto): Promise<Product> {
+  const existingProduct = await this.findOne(id);
+  if (!existingProduct) {
+    throw new NotFoundException('Product not found');
   }
+  const updatedProduct: Product = {
+    ...existingProduct,
+    ...updateProductDto, 
+  };
 
-  async updateStock(productId: number, quantity: number): Promise<void> {
-    const product = await this.productRepository.findOneBy({ id: productId });
-    if (product) {
-      product.stock -= quantity; 
-      await this.productRepository.save(product);
-    }
-  }
+  await this.productRepository.save(updatedProduct); 
+  return updatedProduct; 
+}
 
-  async remove(id: number): Promise<void> {
+
+ async remove(id: number): Promise<void> {
     await this.productRepository.delete(id);
+  } 
+
+  async findByCategory(category: string): Promise<Product[]> {
+    return await this.productRepository.find({ where: { category } });
+  }
+
+  async findDiscountedProducts(): Promise<Product[]> {
+    return await this.productRepository.find({ where: { isOnDiscount: true } });
+  }
+
+  async findByName(name: string): Promise<Product[]> {
+    return await this.productRepository
+      .createQueryBuilder('product')
+      .where('product.name LIKE :name', { name: `%${name}%` })
+      .getMany();
+  }
+
+  async findAvailableProducts(): Promise<Product[]> {
+    return await this.productRepository.find({ where: { stock: MoreThan(0) } });
   }
 }

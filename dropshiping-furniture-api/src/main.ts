@@ -15,6 +15,7 @@ async function bootstrap() {
   .setTitle('Dropship Furniture API')
   .setDescription('API description for Dropship Furniture')
   .setVersion('1.0')
+  .addBearerAuth()
   .build();
 
   
