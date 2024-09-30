@@ -1,10 +1,14 @@
-import { Controller, Get, Post, Param, Body, Put, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body, Put, Delete, Query, UseGuards } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
 
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/guards/roles.quard';
+import { Roles } from 'src/decorators/roles.decorator';
+
 
 @ApiTags('products')
 @Controller('products')
@@ -58,6 +62,8 @@ export class ProductController {
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard) 
+  @Roles('admin') 
   @ApiOperation({ summary: 'Create a new product', description: 'Add a new product to the store inventory.' })
   @ApiBody({ type: CreateProductDto })
   @ApiResponse({ status: 201, description: 'Create a new product.' })
@@ -66,6 +72,8 @@ export class ProductController {
   }
 
   @Put(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard) 
+  @Roles('admin') 
   @ApiOperation({ summary: 'Update an existing product', description: 'Modify the details of an existing product by its unique identifier.' })
   @ApiParam({ name: 'id', required: true, description: 'Product ID' })
   @ApiResponse({ status: 200, description: 'Update an existing product.' })
@@ -74,6 +82,8 @@ export class ProductController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard) 
+  @Roles('admin') 
   @ApiOperation({ summary: 'Delete a product', description: 'Remove a product from the store inventory by its unique identifier.' })
   @ApiParam({ name: 'id', required: true, description: 'Product ID' })
   @ApiResponse({ status: 204, description: 'Delete a product.' })
