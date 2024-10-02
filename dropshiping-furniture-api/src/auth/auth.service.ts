@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException,ConflictException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/users/users.service';
 import { RegisterUserDto } from './dto/register-user.dto';
@@ -14,41 +14,51 @@ export class AuthService {
 
   async validateUser(email: string, pass: string): Promise<any> {
     const user = await this.userService.findByEmail(email);
-    if (user) {
-      const isPasswordValid = await bcrypt.compare(pass, user.password);
-      if (isPasswordValid) {
-        delete user.password;
-        return user;
-      }
+    if (!user) {
+      throw new UnauthorizedException('User not found');
     }
-  }
-
-  async register({ email, password, role }: RegisterUserDto) {
-    // Check if the user already exists
-    const existingUser = await this.userService.findByEmail(email);
-    if (existingUser) {
-      throw new Error('USer already exiists');
+    const isPasswordValid = await bcrypt.compare(pass, user.password);
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Invalid credentials');
     }
 
-    const saltOrRound = 10;
-    const hash = await bcrypt.hash(password, saltOrRound);
-
-    const user = await this.userService.create(email, hash, role);
-
-    delete user.password;
+    delete user.password; // Remove password before returning
     return user;
   }
 
-  async login(user: LoginUserDto) {
-    const validUser = await this.validateUser(user.email, user.password);
-
-    if (!validUser) {
-      throw new UnauthorizedException('Invalid credentilas');
+  async register({ email, password, role }: RegisterUserDto) {
+    // Check if the email already exists
+    const existingUserByEmail = await this.userService.findByEmail(email);
+    if (existingUserByEmail) {
+      throw new ConflictException('Email already in use');
     }
 
+
+    // Hash the password
+    const saltOrRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltOrRounds);
+
+    // Create the user
+    const user = await this.userService.create({
+      email,
+      password: hashedPassword,
+      role,
+    });
+
+    // Optionally, remove the password before returning
+    delete user.password;
+
+    return user; // Return the newly created user (or any relevant response)
+  }
+
+
+
+  async login(user: LoginUserDto) {
+    const validUser = await this.validateUser(user.email, user.password);
+    
     const payload = {
       email: validUser.email,
-      sub: validUser.id, // main subject (unique identifier) of the token
+      sub: validUser.id,
       role: validUser.role,
     };
 

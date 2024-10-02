@@ -14,7 +14,6 @@ import { UserService } from 'src/users/users.service';
   imports: [
     TypeOrmModule.forFeature([User]),
     PassportModule,
-    
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

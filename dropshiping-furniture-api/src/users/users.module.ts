@@ -1,8 +1,8 @@
-// import { Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 
 
-// @Module({
+@Module({
   
 
-// })
-// export class UsersModule {}
+})
+export class UsersModule {}
