@@ -32,9 +32,7 @@ export class OrderService {
       throw new BadRequestException('No products provided');
     }
     const products = await this.productRepository.findBy({ id: In(productIds) });
-   
-
-
+  
     const totalPrice = products.reduce((acc, product) => {
       if (product.stock < createOrderDto.quantity) {
         throw new BadRequestException(`Not enough stock for product ID ${product.id}`);
@@ -66,7 +64,6 @@ export class OrderService {
     return savedOrder;
   }
   
-
   async update(id: number, order: Order): Promise<Order> {
     await this.orderRepository.update(id, order);
     return this.orderRepository.findOne({ where: { id }, relations: ['products'] }); 

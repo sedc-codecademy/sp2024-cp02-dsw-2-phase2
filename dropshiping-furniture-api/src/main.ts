@@ -8,6 +8,7 @@ import {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
 
   app.setGlobalPrefix('api'); 
 
@@ -25,6 +26,13 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config, options);
   SwaggerModule.setup('api', app, document);
+
+  // app.enableCors({
+  //   origin: 'http://127.0.0.1:5502', 
+  //   methods: 'GET,POST,PUT,DELETE',   
+  //   allowedHeaders: 'Content-Type',  
+  // });
+
 
   await app.listen(3000);
 }

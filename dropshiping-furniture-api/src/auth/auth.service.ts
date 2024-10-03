@@ -14,17 +14,20 @@ export class AuthService {
 
   async validateUser(email: string, pass: string): Promise<any> {
     const user = await this.userService.findByEmail(email);
+    console.log('User found:', user); 
     if (user) {
       const isPasswordValid = await bcrypt.compare(pass, user.password);
+      console.log('Password valid:', isPasswordValid);  
       if (isPasswordValid) {
         delete user.password;
         return user;
       }
     }
+    return null;
   }
+  
 
   async register({ email, password, role }: RegisterUserDto) {
-    // Check if the user already exists
     const existingUser = await this.userService.findByEmail(email);
     if (existingUser) {
       throw new Error('USer already exiists');
@@ -48,7 +51,7 @@ export class AuthService {
 
     const payload = {
       email: validUser.email,
-      sub: validUser.id, // main subject (unique identifier) of the token
+      sub: validUser.id, 
       role: validUser.role,
     };
 
