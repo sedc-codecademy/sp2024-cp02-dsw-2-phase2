@@ -1,6 +1,6 @@
 import { Body, Injectable, NotFoundException, Param } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MoreThan, Repository } from 'typeorm';
+import { Between, MoreThan, Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -64,5 +64,31 @@ async update(id: number, updateProductDto: UpdateProductDto): Promise<Product> {
 
   async findAvailableProducts(): Promise<Product[]> {
     return await this.productRepository.find({ where: { stock: MoreThan(0) } });
+  }
+  async findBySort(
+    sortOrder: 'lowestToHigher' | 'higherToLower' = 'lowestToHigher', 
+    sortBy: 'AtoZ' | 'ZtoA' = 'AtoZ'
+  ): Promise<Product[]> {
+    try {
+      const query = this.productRepository.createQueryBuilder('product');
+
+      if (sortOrder === 'lowestToHigher') {
+        query.addOrderBy('product.price', 'ASC');
+      } else if (sortOrder === 'higherToLower') {
+        query.addOrderBy('product.price', 'DESC');
+      }
+  
+    
+      if (sortBy === 'AtoZ') {
+        query.addOrderBy('product.name', 'ASC');
+      } else if (sortBy === 'ZtoA') {
+        query.addOrderBy('product.name', 'DESC');
+      }
+  
+      return await query.getMany();
+    } catch (error) {
+      console.error('Error occurred during product sorting:', error);  // Логирај ја грешката
+      throw new Error('Failed to fetch sorted products');
+    }
   }
 }

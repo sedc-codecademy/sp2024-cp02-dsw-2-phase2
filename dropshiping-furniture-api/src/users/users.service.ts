@@ -19,17 +19,6 @@ export class UserService {
     }
   }
 
-  // with exception handling
-  //   async findByEmail(email: string) {
-  //     try {
-  //       const foundUser = await this.userRepository.findOneByOrFail({ email });
-  //       return foundUser;
-  //     } catch (error) {
-  //       throw new NotFoundException('User not found');
-  //     }
-  //   }
-
-  // without exception handling
   findByEmail(email: string): Promise<User> {
     return this.userRepository.findOneBy({ email });
   }

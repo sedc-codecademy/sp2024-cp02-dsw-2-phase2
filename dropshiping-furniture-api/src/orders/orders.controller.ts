@@ -46,7 +46,6 @@ async update(@Param('id') id: number, @Body() updateOrderDto: UpdateOrderDto): P
   return this.orderService.update(id, updatedOrder);
 }
 
-
   @Delete(':id')
   @ApiOperation({ summary: 'Delete an order', description: 'Remove an order from the system by its unique identifier.' })
   @ApiParam({ name: 'id', required: true, description: 'Order ID' })

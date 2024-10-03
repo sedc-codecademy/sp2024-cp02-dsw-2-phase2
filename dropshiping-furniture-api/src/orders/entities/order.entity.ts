@@ -26,7 +26,6 @@ export class Order {
   @Column('text', { nullable: true })
   notes?: string;
 
-
   @ManyToMany(() => Product, product => product.orders)
   @JoinTable()
   products: Product[];

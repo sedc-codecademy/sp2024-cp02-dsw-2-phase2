@@ -4,7 +4,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
 
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody, ApiQuery } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/guards/roles.quard';
 import { Roles } from 'src/decorators/roles.decorator';
@@ -52,6 +52,33 @@ export class ProductController {
   async findAvailableProducts(): Promise<Product[]> {
     return this.productService.findAvailableProducts();
   }
+  @Get('filter')
+@ApiOperation({ summary: 'Sort products by price and name' })
+@ApiResponse({ status: 200, description: 'Get sorted products by price and sorting options.' })
+@ApiResponse({ status: 400, description: 'Invalid sorting options provided.' })
+@ApiQuery({
+  name: 'sortOrder',
+  required: false,
+  type: String,
+  enum: ['lowestToHigher', 'higherToLower'],
+  example: 'lowestToHigher',
+  description: 'Sort order for price (lowest to higher, higher to lower).'
+})
+@ApiQuery({
+  name: 'sortBy',
+  required: false,
+  type: String,
+  enum: ['AtoZ', 'ZtoA'],
+  example: 'AtoZ',
+  description: 'Sort order for name (A to Z, Z to A).'
+})
+async getSortedProducts(
+  @Query('sortOrder') sortOrder: 'lowestToHigher' | 'higherToLower' = 'lowestToHigher',
+  @Query('sortBy') sortBy: 'AtoZ' | 'ZtoA' = 'AtoZ',
+): Promise<Product[]> {
+  return this.productService.findBySort(sortOrder, sortBy);
+}
+
 
   @Get(':id')
   @ApiOperation({ summary: 'Get product by ID', description: 'Retrieve a single product by its unique identifier.' })
@@ -90,4 +117,9 @@ export class ProductController {
   async remove(@Param('id') id: number): Promise<void> {
     return this.productService.remove(id);
   }
+
+  
 }
+
+
+
