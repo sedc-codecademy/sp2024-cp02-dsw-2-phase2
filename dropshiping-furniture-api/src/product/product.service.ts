@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { CreateProductDto } from './dto/create-product.dto';
+// import { writeFile } from 'fs/promises';
+// import { join } from 'path';
 
 
 @Injectable()
@@ -23,6 +25,13 @@ export class ProductService {
   async findOne(id: number): Promise<Product> {
     return await this.productRepository.findOneBy({ id });
   }
+  
+
+  // async saveProducts(products: Product[]) {
+  //   await writeFile(join(process.cwd(), 'src', 'data', 'updatedproducts.json'), JSON.stringify(products, null, 2),
+  //       'utf-8'
+  //     );
+  //   }
 
   async create(createProductDto: CreateProductDto): Promise<Product> {
     const product = this.productRepository.create(createProductDto); // Создавање на нов објект

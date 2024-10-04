@@ -19,9 +19,9 @@ export class CreateProductDto {
   categoryId: number;
   
   //
-  // @ApiProperty({ description: "The category of the product" })
-  // @IsString()
-  // category: string;
+  @ApiProperty({ description: "The category of the product" })
+  @IsString()
+  categoryName: string;
 
   @ApiProperty({ description: "The price of the product" })
   @IsInt()

@@ -14,16 +14,17 @@ export class CategoriesService {
 
 
 //get all categories
-  async getAllCategories(): Promise<Category[]> {
+  async getAllCategories() {
     const categories = await this.categoryRepo.find();
     console.log('categories list:', categories);
 
     return categories;
   }
+  
 //save categories
 //categories json-ot go kreirav za da istestiram categories
   async saveCategories(categories: Category[]) {
-  await writeFile(join(process.cwd(), 'src', 'categories', 'data', 'categories.json'), JSON.stringify(categories, null, 2),
+  await writeFile(join(process.cwd(), 'src', 'data', 'categories.json'), JSON.stringify(categories, null, 2),
       'utf-8'
     );
   }
@@ -38,24 +39,28 @@ export class CategoriesService {
 
 //create category
   async createCategory(categoryData: CreateCategoryDto) {
-    const categories = await this.getAllCategories();
+const createdCategory = await this.getCategoryById(categoryData.categoryId)
+
+if(createdCategory) {
+  throw new Error('Category already exist with that id')
+
+}
 
     const newCategory: Category = {
       categoryId: Number,
       ...categoryData,
     }
 
-    categories.push(newCategory);
+
+const categories = await this.getAllCategories();
+
+categories.push(newCategory);
 
     await this.saveCategories(categories);
 
     return newCategory;
   }
 
-  //update mislam nema potreba
-  // update(id: number, updateCategoryDto: UpdateCategoryDto) {
-  //   return `This action updates a #${id} category`;
-  // }
 
 
   async deleteCategory(catId: number) {

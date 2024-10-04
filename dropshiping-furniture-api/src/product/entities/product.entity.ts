@@ -1,7 +1,8 @@
+// import { Category } from 'src/categories/entities/category.entity';
 import { Category } from 'src/categories/entities/category.entity';
 import { OrderProduct } from 'src/order-product/entities/order-product.entity';
 import { Order } from 'src/orders/entities/order.entity';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, OneToMany, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
 
 @Entity()
 export class Product {
@@ -39,9 +40,10 @@ export class Product {
   orderProducts?: OrderProduct[];
 
   //go dodav ova za kategorite
-  // @ManyToOne(() => Category, category => category.products)
-  // category?: Category;
+  @ManyToOne(() => Category, category => category.products)
+  @JoinColumn({ name: 'categoryId' })
+  category?: Category;
 
-  @Column({ nullable: true })
-  categoryId?: number;
+  // @Column({ nullable: true })
+  // categoryId?: number;
 }
