@@ -5,40 +5,35 @@ import {
   Body,
   Param,
   Delete,
+  Res,
 } from "@nestjs/common";
 import { CategoriesService } from "./categories.service";
 import { CreateCategoryDto } from "./dto/create-category.dto";
+import { Response } from "express";
 
-@Controller("categories")
+@Controller("cat")
 export class CategoriesController {
-  constructor(private readonly categoriesService: CategoriesService) { }
-
+  constructor(private readonly categoryService: CategoriesService) { }
 
   @Get()
   getAllCategories() {
-    return this.categoriesService.getAllCategories();
+    return this.categoryService.getAllCats();
   }
 
-  @Get(":id")
-  getCategoryById(@Param("id") id: string) {
-    return this.categoriesService.getCategoryById(+id);
+  @Get(':id')
+  getCategoryById(@Param('id') id: string) {
+    return this.categoryService.getCategoryById(Number(id));
   }
 
   @Post()
   createCategory(@Body() categoryData: CreateCategoryDto) {
-    return this.categoriesService.createCategory(categoryData);
+    return this.categoryService.createCats(categoryData)
   }
 
-  // @Patch(":id")
-  // update(
-  //   @Param("id") id: string,
-  //   @Body() updateCategoryDto: UpdateCategoryDto,
-  // ) {
-  //   return this.categoriesService.update(+id, updateCategoryDto);
-  // }
+  @Delete(':id')
+  async deleteCategory(@Res() res: Response, @Param('id') catId: string) {
+    await this.categoryService.deleteCat(Number(catId))
 
-  @Delete(":id")
-  deleteCategory(@Param("id") id: string) {
-    return this.categoriesService.deleteCategory(Number(id));
+    res.sendStatus(204)
   }
 }

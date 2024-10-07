@@ -7,14 +7,14 @@
 //   })
 //   @IsInt()
 //   @IsNotEmpty()
-//   orderId: number;
+//   order_id: number;
 
 //   @ApiProperty({
 //     description: 'ID of the product being ordered',
 //   })
 //   @IsInt()
 //   @IsNotEmpty()
-//   productId: number;
+//   product_id: number;
 
 //   @ApiProperty({
 //     description: 'Quantity of the product being ordered',

@@ -67,9 +67,9 @@ export class ProductController {
   @ApiResponse({ status: 200, description: "Update an existing product." })
   update(
     @Param("id") id: number,
-    @Body() updateProductData: UpdateProductDto,
-  ): Promise<Product> {
-    return this.productService.update(id, updateProductData);
+    @Body() updateData: UpdateProductDto,
+  ) {
+    return this.productService.update(id, updateData);
   }
 
   @Delete(":id")

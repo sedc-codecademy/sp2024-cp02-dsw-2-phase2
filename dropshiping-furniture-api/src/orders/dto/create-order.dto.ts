@@ -13,19 +13,19 @@ export class CreateOrderDto {
     description: 'Total price of the order',
   })
   @IsInt()
-  totalPrice?: number;
+  total_price?: number;
 
   @ApiProperty({
     description: 'Name of the customer placing the order',
   })
   @IsString()
-  customerName: string;
+  customer_name: string;
 
   @ApiProperty({
     description: 'Email of the customer placing the order',
   })
   @IsEmail()
-  customerEmail: string;
+  customer_email: string;
 
   @ApiPropertyOptional({
     description: 'Additional notes or instructions for the order',
@@ -41,7 +41,7 @@ export class CreateOrderDto {
   @IsArray()
   @IsNotEmpty()
   @IsInt({ each: true })
-  productIds: number[]; 
+  product_ids: number[]; 
 
 
 }

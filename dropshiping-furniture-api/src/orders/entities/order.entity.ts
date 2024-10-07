@@ -6,21 +6,18 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMan
 export class Order {
   @PrimaryGeneratedColumn()
   id: number;
-
-  // @Column()
-  // productId: number;
-
+  
   @Column("int")
   quantity: number;
 
   @Column("decimal")
-  totalPrice: number;
+  total_price: number;
 
   @Column()
-  customerName: string;
+  customer_name: string;
 
   @Column()
-  customerEmail: string;
+  customer_email: string;
 
   @Column("text", { nullable: true })
   notes?: string;
@@ -31,7 +28,11 @@ export class Order {
   products: Product[];
   
   @OneToMany(() => OrderProduct, (orderProduct) => orderProduct.order, { cascade: true })
-  orderProducts: OrderProduct[];
+  order_products: OrderProduct[];
+
+  // @ManyToOne(() => User, (user) => user.orders)
+  // @JoinColumn()
+  // user: User;
 }
 
 

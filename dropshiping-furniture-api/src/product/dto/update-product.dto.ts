@@ -5,6 +5,7 @@ import {
   IsOptional,
   IsArray,
   IsPositive,
+  IsNumber,
 } from "class-validator";
 import { CreateProductDto } from "./create-product.dto";
 import { PartialType } from "@nestjs/mapped-types";
@@ -12,67 +13,75 @@ import { ApiPropertyOptional } from "@nestjs/swagger";
 
 export class UpdateProductDto extends PartialType(CreateProductDto) {
   @ApiPropertyOptional({
-    description: "Name of the product (optional)",
+    description: 'Name of the product (optional)',
+
   })
   @IsString()
   @IsOptional()
-  name?: string;
+  name: string;
 
   @ApiPropertyOptional({
-    description: "Category of the product (optional)",
+    description: 'Category of the product (optional)',
+
   })
-  @IsString()
-  @IsOptional()
-  categoryName?: string;
+  @IsNumber()
+  category_id?: number;
 
   @ApiPropertyOptional({
-    description: "Price of the product (optional)",
+    description: 'Price of the product (optional)',
+
   })
   @IsInt()
   @IsPositive()
   @IsOptional()
-  price?: number;
+  price: number;
 
-  @ApiPropertyOptional({})
+  @ApiPropertyOptional({
+
+  })
   @IsInt()
   @IsPositive()
   @IsOptional()
-  discountPrice?: number;
+  discountPrice: number;
 
   @ApiPropertyOptional({
-    description: "Indicates if the product is on discount (optional)",
+    description: 'Indicates if the product is on discount (optional)',
+
   })
   @IsBoolean()
   @IsOptional()
-  isOnDiscount?: boolean;
+  isOnDiscount: boolean;
 
   @ApiPropertyOptional({
-    description: "Image URL of the product (optional)",
+    description: 'Image URL of the product (optional)',
+
+  })
+
+
+  @ApiPropertyOptional({
+    description: 'Description of the product (optional)',
+
   })
   @IsString()
   @IsOptional()
-  image?: string;
+  description: string;
 
   @ApiPropertyOptional({
-    description: "Description of the product (optional)",
-  })
-  @IsString()
-  @IsOptional()
-  description?: string;
+    description: 'Array of image URLs for the product (optional)',
 
-  @ApiPropertyOptional({
-    description: "Array of image URLs for the product (optional)",
   })
   @IsArray()
   @IsString({ each: true })
   @IsOptional()
-  imageUrl?: string[];
+  imageUrl: string[];
 
   @ApiPropertyOptional({
-    description: "Stock quantity of the product (optional)",
+    description: 'Stock quantity of the product (optional)',
+
   })
   @IsInt()
   @IsPositive()
   @IsOptional()
-  stock?: number;
+  stock: number;
 }
+

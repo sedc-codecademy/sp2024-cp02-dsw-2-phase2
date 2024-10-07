@@ -3,8 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { CreateProductDto } from './dto/create-product.dto';
-// import { writeFile } from 'fs/promises';
-// import { join } from 'path';
 
 
 @Injectable()
@@ -12,31 +10,25 @@ export class ProductService {
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
-  ) {}
+  ) { }
 
 
   async findAll(): Promise<Product[]> {
-    console.log('Fetching all products'); 
+    console.log('Fetching all products');
     const products = await this.productRepository.find();
-    console.log('Products retrieved:', products); 
+    console.log('Products retrieved:', products);
     return products;
   }
 
   async findOne(id: number): Promise<Product> {
     return await this.productRepository.findOneBy({ id });
   }
-  
 
-  // async saveProducts(products: Product[]) {
-  //   await writeFile(join(process.cwd(), 'src', 'data', 'updatedproducts.json'), JSON.stringify(products, null, 2),
-  //       'utf-8'
-  //     );
-  //   }
 
   async create(createProductDto: CreateProductDto): Promise<Product> {
     const product = this.productRepository.create(createProductDto); // Создавање на нов објект
     return await this.productRepository.save(product);
-}
+  }
 
 
 
@@ -48,7 +40,7 @@ export class ProductService {
   async updateStock(productId: number, quantity: number): Promise<void> {
     const product = await this.productRepository.findOneBy({ id: productId });
     if (product) {
-      product.stock -= quantity; 
+      product.stock -= quantity;
       await this.productRepository.save(product);
     }
   }

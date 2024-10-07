@@ -2,10 +2,10 @@ import { IsNumber, IsString } from "class-validator";
 
 export class CreateCategoryDto {
     @IsNumber()
-    categoryId: number;
+    category_id: number;
 
     @IsString()
-    categoryName: string;
+    category_name: string;
 
 
 }

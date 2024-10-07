@@ -1,71 +1,42 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateCategoryDto } from "./dto/create-category.dto";
-import { InjectRepository } from "@nestjs/typeorm";
 import { Category } from "./entities/category.entity";
+import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { writeFile } from "fs/promises";
-import { join } from "path";
 
 @Injectable()
 export class CategoriesService {
-  constructor(@InjectRepository(Category)
-  private readonly categoryRepo: Repository<Category>
+  constructor(
+    @InjectRepository(Category)
+    private readonly categoryRepo: Repository<Category>,
   ) { }
-
-
-//get all categories
-  async getAllCategories() {
+  async getAllCats() {
+    console.log('fetch all cats');
     const categories = await this.categoryRepo.find();
-    console.log('categories list:', categories);
-
+    console.log('cats retrived', categories);
     return categories;
   }
-  
-//save categories
-//categories json-ot go kreirav za da istestiram categories
-  async saveCategories(categories: Category[]) {
-  await writeFile(join(process.cwd(), 'src', 'data', 'categories.json'), JSON.stringify(categories, null, 2),
-      'utf-8'
-    );
-  }
 
-  //get category by id
- async getCategoryById(categoryId: number) {
-    const foundCategory = await this.categoryRepo.findOneBy({categoryId});
+  //get cat by id
+  async getCategoryById(categoryId: number) {
+    const categories = await this.getAllCats();
+    const foundCategory = categories.find(cat => cat.category_id === categoryId)
 
-    if(!foundCategory) throw new NotFoundException('category not found')
+    if (!foundCategory) throw new NotFoundException('Cat not found');
+
     return foundCategory;
   }
 
-//create category
-  async createCategory(categoryData: CreateCategoryDto) {
-const createdCategory = await this.getCategoryById(categoryData.categoryId)
-
-if(createdCategory) {
-  throw new Error('Category already exist with that id')
-
-}
-
-    const newCategory: Category = {
-      categoryId: Number,
-      ...categoryData,
-    }
-
-
-const categories = await this.getAllCategories();
-
-categories.push(newCategory);
-
-    await this.saveCategories(categories);
-
-    return newCategory;
+  async createCats(createCatData: CreateCategoryDto) {
+    const category = this.categoryRepo.create(createCatData);
+    return await this.categoryRepo.save(category);
   }
 
+  //delete category
+  async deleteCat(catId: number) {
+    const foundCat = await this.getCategoryById(catId);
 
+    await this.categoryRepo.remove(foundCat);
 
-  async deleteCategory(catId: number) {
-    const foundCategory = await this.getCategoryById(catId);
-
-    await this.categoryRepo.remove(foundCategory)
   }
 }

@@ -17,7 +17,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
           username: configService.get("DATABASE_USERNAME"),
           password: configService.get("DATABASE_PASSWORD"),
           database: configService.get("DATABASE_NAME"),
-          entities: [entitiesPath],
+          autoLoadEntities: true,
           synchronize: process.env.NODE_ENV !== "production",
         };
       },

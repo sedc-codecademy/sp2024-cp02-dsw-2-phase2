@@ -10,7 +10,7 @@ export class ContactController {
 
     @Get()
    sendMailer(@Res() response: any) {
-        const mail = this.contactService.sendMail({ customerName: 'John Doe', customerEmail: 'john@example.com', id: 'ORDER123' });
+        const mail = this.contactService.sendMail({ customer_name: 'John Doe', customer_email: 'john@example.com', id: 'ORDER123' });
         
         return response.status(200).json({
             message: 'success',
@@ -21,7 +21,7 @@ export class ContactController {
     @Post()
     async sendOrderNotification(
         @Res() response: any,
-        @Body('order') orderData: Order | { customerName?: string; customerEmail?: string; id?: string }
+        @Body('order') orderData: Order | { customer_name: string; customer_email: string; id?: string }
     ) {
         if (!orderData || typeof orderData !== 'object' || Object.keys(orderData).length === 0) {
             throw new BadRequestException('Invalid order data provided');

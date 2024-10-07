@@ -29,12 +29,12 @@ export class OrderService {
   }
 
   async create(createOrderDto: CreateOrderDto): Promise<Order> {
-    if (!createOrderDto.productIds || createOrderDto.productIds.length === 0) {
+    if (!createOrderDto.product_ids || createOrderDto.product_ids.length === 0) {
       throw new Error("No product IDs provided");
     }
 
     const products = await this.productRepository.findBy({
-      id: In(createOrderDto.productIds),
+      id: In(createOrderDto.product_ids),
     });
 
     if (products.length === 0) {
@@ -51,9 +51,9 @@ export class OrderService {
 
     const order = new Order();
     order.quantity = createOrderDto.quantity;
-    order.totalPrice = totalPrice;
-    order.customerName = createOrderDto.customerName;
-    order.customerEmail = createOrderDto.customerEmail;
+    order.total_price = totalPrice;
+    order.customer_name = createOrderDto.customer_name;
+    order.customer_email = createOrderDto.customer_email;
     order.notes = createOrderDto.notes;
 
     const savedOrder = await this.orderRepository.save(order);
