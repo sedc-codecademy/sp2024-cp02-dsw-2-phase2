@@ -14,18 +14,18 @@ export class Product {
   @Column('int')
   price: number;
 
-  @Column('int', { nullable: true })
+  @Column('int', { name: 'discount_price' })
   discountPrice: number;
 
-  @Column()
+  @Column({ name: 'is_on_discount' })
   isOnDiscount: boolean;
 
-  @Column('text', { nullable: true })
+  @Column('text')
   description: string;
 
-  @Column('simple-array')
+  @Column('simple-array', { name: 'image_url' })
   imageUrl: string[];
-
+  
   @Column('int')
   stock: number;
 
@@ -38,5 +38,5 @@ export class Product {
   //go dodav ova za kategorite
   @ManyToOne(() => Category, category => category.products)
   @JoinColumn({ name: 'category_id' })
-  category?: Category;
+  category: Category[];
 }
